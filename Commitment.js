@@ -28,8 +28,21 @@ var milestones_num = 0;
 function insert_milestone(person, milestone, commitment) {
   milestones_num += 1;
   var milestone_row = milestones_num + 2;
-  commitment_sheet.getRange(milestone_row, 1).setValue(milestone);
+  style_milestone(milestone_row);
 
-  console.log("Adding " + milestone + " for " +
-    person + " with commitment " + commitment);
+  commitment_sheet.getRange(milestone_row, 1).setValue(milestone);
+}
+
+function style_milestone(milestone_row) {
+  // Milestone name background color: light green 3
+  // See https://yagisanatode.com/2019/08/06/google-apps-script-hexadecimal-color-codes-for-google-docs-sheets-and-slides-standart-palette/
+  commitment_sheet.getRange(milestone_row, 1).setBackground("#d9ead3");
+
+  // Borders
+  commitment_sheet.getRange(milestone_row, 1, 1, 6)
+    .setBorder(true, true, true, true, true, true);
+
+  // Time frames bg color: light yellow 3
+  commitment_sheet.getRange(milestone_row, 2, 1, 5)
+    .setBackground("#fff2cc");
 }
