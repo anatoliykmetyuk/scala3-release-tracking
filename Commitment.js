@@ -1,37 +1,65 @@
-var milestones_sheet = SpreadsheetApp.getActive().getSheetByName("Milestones");
-var commitment_sheet = SpreadsheetApp.getActive().getSheetByName("Commitment");
+const milestones_sheet = SpreadsheetApp.getActive().getSheetByName("Milestones");
+const commitment_sheet = SpreadsheetApp.getActive().getSheetByName("Commitment");
+const timeframes = [
+  {start: date("07/01/2020"), end: date("08/01/2020")},
+  {start: date("08/01/2020"), end: date("09/01/2020")},
+  {start: date("09/01/2020"), end: date("10/01/2020")},
+  {start: date("10/01/2020"), end: date("11/01/2020")},
+  {start: date("11/01/2020"), end: date("12/01/2020")},
+];
+
 
 function commitment_main() {
-  commitment_sheet.getRange("A3:F99").clear();
+  commitment_sheet.getRange("A3:G99").clear();
 
-  var person = commitment_sheet.getRange("B1")
-    .getValue();
-  console.log("Processing " + person);
+  const person = commitment_sheet.getRange("B1").getValue();
+  const milestones = milestones_sheet.getRange("A2:A99").getValues();
+  const personCol = milestones_sheet.getRange(1, 5, 1, 99)
+    .getValues()[0].findIndex(p => p == person) + 5;
 
-  var milestones = milestones_sheet
-    .getRange("A2:A99").getValues();
-  var personCol = milestones_sheet
-    .getRange(1, 5, 1, 99)
-    .getValues()[0]
-    .findIndex(p => p == person) + 5;
+  for (i = 0; i < milestones.length; i++) {
+    const row = i + 2;
+    const milestone = milestones[row][0];
+    const commitment = milestones_sheet.getRange(row + 2, personCol).getValue();
+    const timeframe = {
+      start: milestones_sheet.getRange(row, 3).getValue(),
+      end: milestones_sheet.getRange(row, 4).getValue()
+    };
 
-  for (r = 0; r < milestones.length; r++) {
-    var ms = milestones[r][0];
-    var commitment = milestones_sheet
-      .getRange(r + 2, personCol).getValue();
-    if (commitment != "")
-      insert_milestone(person, ms, commitment);
+    if (commitment != "") {
+      insert_milestone(person, milestone, timeframe, commitment);
+    }
   }
 }
 
 var milestones_num = 0;
-function insert_milestone(person, milestone, commitment) {
+function insert_milestone(person, milestone,
+    milestone_timeframe, commitment) {
   milestones_num += 1;
-  var milestone_row = milestones_num + 2;
+  const milestone_row = milestones_num + 2;
   style_milestone(milestone_row);
 
   commitment_sheet.getRange(milestone_row, 1).setValue(milestone);
+
+  for (i = 0; i <= timeframes.length; i++) {
+    if (overlaps(milestone_timeframe, timeframes[i])) {
+      const range = commitment_sheet.getRange(milestone_row, i + 2);
+      range.setValue(commitment);
+      range.setBackground("#d9d2e9"); // light purple 3
+    }
+  }
 }
+
+// Check if two timeframes overlap
+// See https://stackoverflow.com/a/3269471
+function overlaps(tf1s, tf1e, tf2s, tf2e) {
+  return tf1s <= tf2e && tf2s <= tf1e;
+}
+function overlaps(tf1, tf2) {
+  return overlaps(tf1.start, tf2.end, tf2.start, tf2.end);
+}
+
+function date(str) { return new Date(Date.parse(str)); }
 
 function style_milestone(milestone_row) {
   // Milestone name background color: light green 3
@@ -39,10 +67,10 @@ function style_milestone(milestone_row) {
   commitment_sheet.getRange(milestone_row, 1).setBackground("#d9ead3");
 
   // Borders
-  commitment_sheet.getRange(milestone_row, 1, 1, 6)
+  commitment_sheet.getRange(milestone_row, 1, 1, 7)
     .setBorder(true, true, true, true, true, true);
 
   // Time frames bg color: light yellow 3
-  commitment_sheet.getRange(milestone_row, 2, 1, 5)
+  commitment_sheet.getRange(milestone_row, 2, 1, 6)
     .setBackground("#fff2cc");
 }
