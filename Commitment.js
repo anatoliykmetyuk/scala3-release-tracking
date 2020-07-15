@@ -41,13 +41,20 @@ function insert_milestone(person, milestone,
 
   commitment_sheet.getRange(milestone_row, 1).setValue(milestone);
 
+  var start = null;
+  var end = null;
   for (j = 0; j < timeframes.length; j++) {
     if (overlaps(milestone_timeframe, timeframes[j])) {
-      const range = commitment_sheet.getRange(milestone_row, j + 2);
-      range.setValue(commitment);
-      range.setBackground("#d9d2e9"); // light purple 3
+      if (start == null) start = j;
+      end = j;
+      console.log(start + " ; " + end);
     }
   }
+  console.log((start + 2) + " " + (end - start + 1));
+  commitment_sheet.getRange(milestone_row, start + 2, 1, end - start + 1)
+    .setValue(commitment)
+    .mergeAcross()
+    .setBackground("#d9d2e9"); // light purple 3
 }
 
 // Check if two timeframes overlap
