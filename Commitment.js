@@ -54,6 +54,7 @@ function insert_milestone(person, milestone,
   commitment_sheet.getRange(milestone_row, start + 2, 1, end - start + 1)
     .setValue(commitment)
     .mergeAcross()
+    .setHorizontalAlignment("center")
     .setBackground("#d9d2e9"); // light purple 3
 }
 
