@@ -19,8 +19,8 @@ function commitment_main() {
 
   for (i = 0; i < milestones.length; i++) {
     const row = i + 2;
-    const milestone = milestones[row][0];
-    const commitment = milestones_sheet.getRange(row + 2, personCol).getValue();
+    const milestone = milestones[i][0];
+    const commitment = milestones_sheet.getRange(row, personCol).getValue();
     const timeframe = {
       start: milestones_sheet.getRange(row, 3).getValue(),
       end: milestones_sheet.getRange(row, 4).getValue()
@@ -41,8 +41,9 @@ function insert_milestone(person, milestone,
 
   commitment_sheet.getRange(milestone_row, 1).setValue(milestone);
 
-  for (i = 0; i <= timeframes.length; i++) {
+  for (i = 0; i < timeframes.length; i++) {
     if (overlaps(milestone_timeframe, timeframes[i])) {
+      console.log(milestone_timeframe + " overlaps with " + timeframes[i]);
       const range = commitment_sheet.getRange(milestone_row, i + 2);
       range.setValue(commitment);
       range.setBackground("#d9d2e9"); // light purple 3
@@ -52,11 +53,8 @@ function insert_milestone(person, milestone,
 
 // Check if two timeframes overlap
 // See https://stackoverflow.com/a/3269471
-function overlaps(tf1s, tf1e, tf2s, tf2e) {
-  return tf1s <= tf2e && tf2s <= tf1e;
-}
 function overlaps(tf1, tf2) {
-  return overlaps(tf1.start, tf2.end, tf2.start, tf2.end);
+  return tf1.start < tf2.end && tf2.start < tf1.end;
 }
 
 function date(str) { return new Date(Date.parse(str)); }
