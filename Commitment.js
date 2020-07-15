@@ -41,10 +41,9 @@ function insert_milestone(person, milestone,
 
   commitment_sheet.getRange(milestone_row, 1).setValue(milestone);
 
-  for (i = 0; i < timeframes.length; i++) {
-    if (overlaps(milestone_timeframe, timeframes[i])) {
-      console.log(milestone_timeframe + " overlaps with " + timeframes[i]);
-      const range = commitment_sheet.getRange(milestone_row, i + 2);
+  for (j = 0; j < timeframes.length; j++) {
+    if (overlaps(milestone_timeframe, timeframes[j])) {
+      const range = commitment_sheet.getRange(milestone_row, j + 2);
       range.setValue(commitment);
       range.setBackground("#d9d2e9"); // light purple 3
     }
