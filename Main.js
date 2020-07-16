@@ -8,6 +8,7 @@ const timeframes = [
   {start: date("11/01/2020"), end: date("12/01/2020")},
   {start: date("12/01/2020"), end: date("01/01/2021")}
 ];
+const progress_cell = commitment_sheet.getRange("C1");
 
 function onEdit(e) {
   var name = e.source.getActiveSheet().getName();
@@ -16,18 +17,19 @@ function onEdit(e) {
 
 function commitment_main() {
   commitment_sheet.getRange("A3:G99").clear();
-  commitment_sheet.getRange("C1")
-    .setValue("Building...")
-    .setBackground("#ffd966");  // light yellow 1
+  progress_cell
+    .setBackground("#ffd966") // light yellow 1
+    .setValue("Building... ");
 
   const person = commitment_sheet.getRange("B1").getValue();
-  const milestones = milestones_sheet.getRange("A2:A99").getValues();
+  const milestones = milestones_sheet.getRange("A2:A99")
+    .getValues().flat().filter(x => x != "");
   const personCol = milestones_sheet.getRange(1, 5, 1, 99)
     .getValues()[0].findIndex(p => p == person) + 5;
 
   for (i = 0; i < milestones.length; i++) {
     const row = i + 2;
-    const milestone = milestones[i][0];
+    const milestone = milestones[i];
     const commitment = milestones_sheet.getRange(row, personCol).getValue();
     const timeframe = {
       start: milestones_sheet.getRange(row, 3).getValue(),
@@ -39,7 +41,7 @@ function commitment_main() {
     }
   }
 
-  commitment_sheet.getRange("C1").clear();
+  progress_cell.clear();
 }
 
 var milestones_num = 0;
@@ -57,10 +59,8 @@ function insert_milestone(person, milestone,
     if (overlaps(milestone_timeframe, timeframes[j])) {
       if (start == null) start = j;
       end = j;
-      console.log(start + " ; " + end);
     }
   }
-  console.log((start + 2) + " " + (end - start + 1));
   commitment_sheet.getRange(milestone_row, start + 2, 1, end - start + 1)
     .setValue(commitment)
     .mergeAcross()
