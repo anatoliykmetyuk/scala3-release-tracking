@@ -16,22 +16,19 @@ function onEdit(e) {
 }
 
 function commitment_main() {
-  style_commitments();
   progress_cell
     .setBackground("#ffd966") // light yellow 1
     .setValue("Building... ");
 
   const person = commitment_sheet.getRange("B1").getValue();
-  const milestones = milestones_sheet.getRange("A2:A99")
-    .getValues().flat().filter(x => x != "");
-  const projects = milestones_sheet.getRange("B2:B99")
-    .getValues().flat();
-  const personCol = milestones_sheet.getRange(1, 5, 1, 99)
-    .getValues()[0].findIndex(p => p == person) + 5;
-  const commitments = milestones_sheet.getRange(2, personCol, 98, 1)
-    .getValues().flat();
-  const timeframes = milestones_sheet.getRange("C2:D99")
-    .getValues();
+  const milestones = milestones_sheet.getRange("A2:A99").getValues().flat().filter(x => x != "");
+  const projects = milestones_sheet.getRange("B2:B99").getValues().flat();
+  const personCol = milestones_sheet.getRange(1, 5, 1, 99).getValues()[0].findIndex(p => p == person) + 5;
+  const commitments = milestones_sheet.getRange(2, personCol, 98, 1).getValues().flat();
+  const timeframes = milestones_sheet.getRange("C2:D99").getValues();
+
+  const milestones_count = commitments.filter(x => x != "").length;
+  style_commitments(milestones_count);
 
   for (i = 0; i < milestones.length; i++) {
     const milestone = milestones[i];
@@ -81,24 +78,23 @@ function overlaps(tf1, tf2) {
 
 function date(str) { return new Date(Date.parse(str)); }
 
-function style_commitments() {
+function style_commitments(milestones_count) {
   // Clear formatting
-
   commitment_sheet.getRange("A3:H99").clear();
 
   // Milestone & Project name background color: light green 3
   // See https://yagisanatode.com/2019/08/06/google-apps-script-hexadecimal-color-codes-for-google-docs-sheets-and-slides-standart-palette/
   commitment_sheet
-    .getRange("A3:B99")
+    .getRange(3, 1, milestones_count, 2) //("A3:B99")
     .setBackground("#d9ead3");
 
   // Borders
   commitment_sheet
-    .getRange("A3:H99")
+    .getRange(3, 1, milestones_count, 8)//("A3:H99")
     .setBorder(true, true, true, true, true, true);
 
   // Time frames bg color: light yellow 3
   commitment_sheet
-    .getRange("C3:H99")
+    .getRange(3, 3, milestones_count, 6)//("C3:H99")
     .setBackground("#fff2cc");
 }
