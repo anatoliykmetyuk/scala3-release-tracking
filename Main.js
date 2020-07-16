@@ -16,7 +16,7 @@ function onEdit(e) {
 }
 
 function commitment_main() {
-  commitment_sheet.getRange("A3:H99").clear();
+  style_commitments();
   progress_cell
     .setBackground("#ffd966") // light yellow 1
     .setValue("Building... ");
@@ -52,7 +52,6 @@ function insert_milestone(person, milestone, project,
     milestone_timeframe, commitment) {
   milestones_num += 1;
   const milestone_row = milestones_num + 2;
-  style_milestone(milestone_row);
 
   commitment_sheet.getRange(milestone_row, 1, 1, 2).setValues([[milestone, project]]);
 
@@ -79,16 +78,24 @@ function overlaps(tf1, tf2) {
 
 function date(str) { return new Date(Date.parse(str)); }
 
-function style_milestone(milestone_row) {
+function style_commitments() {
+  // Clear formatting
+
+  commitment_sheet.getRange("A3:H99").clear();
+
   // Milestone & Project name background color: light green 3
   // See https://yagisanatode.com/2019/08/06/google-apps-script-hexadecimal-color-codes-for-google-docs-sheets-and-slides-standart-palette/
-  commitment_sheet.getRange(milestone_row, 1, 1, 2).setBackground("#d9ead3");
+  commitment_sheet
+    .getRange("A3:B99")
+    .setBackground("#d9ead3");
 
   // Borders
-  commitment_sheet.getRange(milestone_row, 1, 1, 8)
+  commitment_sheet
+    .getRange("A3:H99")
     .setBorder(true, true, true, true, true, true);
 
   // Time frames bg color: light yellow 3
-  commitment_sheet.getRange(milestone_row, 3, 1, 6)
+  commitment_sheet
+    .getRange("C3:H99")
     .setBackground("#fff2cc");
 }
