@@ -67,6 +67,7 @@ function insert_milestone(person, milestone, project,
     .setValue(commitment)
     .mergeAcross()
     .setHorizontalAlignment("center")
+    .setVerticalAlignment("middle")
     .setBackground("#d9d2e9"); // light purple 3
 }
 
@@ -85,16 +86,19 @@ function style_commitments(milestones_count) {
   // Milestone & Project name background color: light green 3
   // See https://yagisanatode.com/2019/08/06/google-apps-script-hexadecimal-color-codes-for-google-docs-sheets-and-slides-standart-palette/
   commitment_sheet
-    .getRange(3, 1, milestones_count, 2) //("A3:B99")
+    .getRange(3, 1, milestones_count, 2)
+    .setWrap(true)
+    .setWrapStrategy(SpreadsheetApp.WrapStrategy.WRAP)
+    .setVerticalAlignment("middle")
     .setBackground("#d9ead3");
 
   // Borders
   commitment_sheet
-    .getRange(3, 1, milestones_count, 8)//("A3:H99")
+    .getRange(3, 1, milestones_count, 8)
     .setBorder(true, true, true, true, true, true);
 
   // Time frames bg color: light yellow 3
   commitment_sheet
-    .getRange(3, 3, milestones_count, 6)//("C3:H99")
+    .getRange(3, 3, milestones_count, 6)
     .setBackground("#fff2cc");
 }
