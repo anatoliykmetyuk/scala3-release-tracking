@@ -25,18 +25,21 @@ function commitment_main() {
   const milestones = milestones_sheet.getRange("A2:A99")
     .getValues().flat().filter(x => x != "");
   const projects = milestones_sheet.getRange("B2:B99")
-    .getValues().flat().filter(x => x != "");
+    .getValues().flat();
   const personCol = milestones_sheet.getRange(1, 5, 1, 99)
     .getValues()[0].findIndex(p => p == person) + 5;
+  const commitments = milestones_sheet.getRange(2, personCol, 98, 1)
+    .getValues().flat();
+  const timeframes = milestones_sheet.getRange("C2:D99")
+    .getValues();
 
   for (i = 0; i < milestones.length; i++) {
-    const row = i + 2;
     const milestone = milestones[i];
     const project = projects[i];
-    const commitment = milestones_sheet.getRange(row, personCol).getValue();
+    const commitment = commitments[i];
     const timeframe = {
-      start: milestones_sheet.getRange(row, 3).getValue(),
-      end: milestones_sheet.getRange(row, 4).getValue()
+      start: timeframes[i][0],
+      end: timeframes[i][1]
     };
 
     if (commitment != "") {
