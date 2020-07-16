@@ -54,8 +54,7 @@ function insert_milestone(person, milestone, project,
   const milestone_row = milestones_num + 2;
   style_milestone(milestone_row);
 
-  commitment_sheet.getRange(milestone_row, 1).setValue(milestone);
-  commitment_sheet.getRange(milestone_row, 2).setValue(project);
+  commitment_sheet.getRange(milestone_row, 1, 1, 2).setValues([[milestone, project]]);
 
   var start = null;
   var end = null;
