@@ -6,6 +6,7 @@ const timeframes = [
   {start: date("09/01/2020"), end: date("10/01/2020")},
   {start: date("10/01/2020"), end: date("11/01/2020")},
   {start: date("11/01/2020"), end: date("12/01/2020")},
+  {start: date("12/01/2020"), end: date("01/01/2021")}
 ];
 
 function onEdit(e) {
